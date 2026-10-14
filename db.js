@@ -1,16 +1,19 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-// const mongoURI = process.env.MONGODB_URI_LOCAL;
-const mongoURI = process.env.MONGODB_URI;
+const mongoURI = process.env.MONGODB_URI || process.env.MONGODB_URI_LOCAL;
 
-mongoose.connect(mongoURI)
+if (!mongoURI) {
+  console.error('MongoDB URI is missing. Set MONGODB_URI or MONGODB_URI_LOCAL in your .env file.');
+} else {
+  mongoose.connect(mongoURI)
     .then(() => {
-        console.log('MongoDB connected');
+      console.log('MongoDB connected');
     })
     .catch((err) => {
-        console.log('MongoDB connection error:', err);
+      console.log('MongoDB connection error:', err.message);
     });
+}
 
 const db = mongoose.connection;
 
